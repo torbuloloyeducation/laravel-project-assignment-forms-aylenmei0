@@ -1,6 +1,15 @@
 <x-layout>
     <form method="POST" action="/formtest">
-        @csrf
+       @csrf
+
+@if(session('success'))
+    <div class="text-green-400 p-2">{{ session('success') }}</div>
+@endif
+
+@if($errors->any())
+    <div class="text-red-400 p-2">{{ $errors->first('email') }}</div>
+@endif
+
 <div class="space-y-12">
     <div class="border-b border-white/10">
       <div class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-12 p-10 bg-gray-800 rounded-lg">
@@ -18,9 +27,17 @@
           <div class="mt-3 p-5">
             <h2 class="text-lg font-semibold text-white">Emails</h2>
         <ul>
-            @foreach ($emails as $email)
-                <li class="text-sm p-1">{{ $email }}</li>
-            @endforeach
+            @foreach ($emails as $index => $email)
+    <li class="text-sm p-1 flex justify-between">
+        {{ $email }}
+        <form method="POST" action="/delete-email">
+            @csrf
+
+            <input type="hidden" name="index" value="{{ $index }}">
+            <button type="submit" class="text-red-400 ml-3">Delete</button>
+        </form>
+    </li>
+@endforeach
           </div>
         </div>
       </div>
